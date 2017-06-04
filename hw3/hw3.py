@@ -97,22 +97,26 @@ summary = 'summary.csv'
 r = open(results, 'w')
 s = open(summary, 'w')
 r.write("scenario, sigma, T, run, loss, error\n")
-s.write("scenario, sigma, T, loss_mean, loss_min, loss_stdev, error_mean, error_stdev\n")
+s.write("scenario, sigma, T, loss_mean, loss_min, loss_stdev, excess, error_mean, error_stdev\n")
+
+N = 400
+runs = 30
+sigmas = [0.05, 0.3]
+Ts = [50, 100, 500, 1000]
 
 # Run experiments on two scenarios
 for project in [projectCube, projectBall]:
     # Run experiments on sigma = 0.05, 0.3
-    for sigma in [0.05, 0.3]:
+    for sigma in sigmas:
         # Generate a single test set for all experiments
-        N = 400
         (TC_X, TC_y) = getTestData(N, sigma, project)
         # Run experiments on T = 50, 100, 500, 1000
-        for T in [50, 100, 500, 1000]:
+        for T in Ts:
             # Initialize L (loss) and E (binary error) for 30 runs
-            L = np.ones(30)
-            E = np.ones(30)
+            L = np.ones(runs)
+            E = np.ones(runs)
             # Do 30 runs for each setting
-            for i in range(30):
+            for i in range(runs):
                 W = runExperiment(T, sigma, project)
                 (L[i], E[i]) = evaluate(W, TC_X, TC_y)
                 if project == projectCube:
@@ -122,7 +126,7 @@ for project in [projectCube, projectBall]:
                 line = [str(scenario), ',', str(sigma), ',', str(T), ',', str(i), ',', str(L[i]), ',', str(E[i])]
                 r.write(''.join(line))
                 r.write('\n')
-            line = [str(scenario), ',', str(sigma), ',', str(T), ',', str(L.mean()), ',', str(L.min()), ',', str(L.std()), ',', str(E.mean()), ',', str(E.std())]
+            line = [str(scenario), ',', str(sigma), ',', str(T), ',', str(L.mean()), ',', str(L.min()), ',', str(L.std()), ',', str(L.mean()-L.min()), ',', str(E.mean()), ',', str(E.std())]
             s.write(''.join(line))
             s.write('\n')
 r.close()
