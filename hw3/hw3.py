@@ -97,7 +97,7 @@ summary = 'summary.csv'
 r = open(results, 'w')
 s = open(summary, 'w')
 r.write("scenario, sigma, T, run, loss, error\n")
-s.write("scenario, sigma, T, loss_mean, loss_min, loss_stdev, excess, error_mean, error_stdev\n")
+s.write("scenario, sigma, T, loss_mean, loss_std, loss_min, excess, error_mean, error_stdev\n")
 
 N = 400
 runs = 30
@@ -126,7 +126,7 @@ for project in [projectCube, projectBall]:
                 line = [str(scenario), ',', str(sigma), ',', str(T), ',', str(i), ',', str(L[i]), ',', str(E[i])]
                 r.write(''.join(line))
                 r.write('\n')
-            line = [str(scenario), ',', str(sigma), ',', str(T), ',', str(L.mean()), ',', str(L.min()), ',', str(L.std()), ',', str(L.mean()-L.min()), ',', str(E.mean()), ',', str(E.std())]
+            line = [str(scenario), ',', str(sigma), ',', str(T), ',', str(L.mean()), ',', str(L.std()), ',', str(L.min()), ',', str(L.mean()-L.min()), ',', str(E.mean()), ',', str(E.std())]
             s.write(''.join(line))
             s.write('\n')
 r.close()
